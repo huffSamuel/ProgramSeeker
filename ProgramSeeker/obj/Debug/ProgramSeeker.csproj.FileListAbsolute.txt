@@ -1,0 +1,13 @@
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe.config
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.pdb
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.exe
+c:\users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.pdb
+C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Model.cmd
+C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Prod.cmd
+C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\ProdVer.cmd
+C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Serial.cmd
