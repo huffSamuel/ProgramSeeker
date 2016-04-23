@@ -20,7 +20,6 @@ T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Pr
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Serial.cmd
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.pdb
-T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache

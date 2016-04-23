@@ -65,7 +65,6 @@ namespace ProgramSeeker
         private void btnStart_Click(object sender, EventArgs e)
         {
             Stopwatch sw = new Stopwatch();
-            string response = "";
             if (chkProdName.Checked)
                 getSoftware();
 
@@ -76,6 +75,7 @@ namespace ProgramSeeker
         {
             TreeNode softNode = new TreeNode("Software");
             TreeNode node;
+            int longest = 0;
             string response = "";
 
             if (chkProdVer.Checked)
@@ -83,24 +83,46 @@ namespace ProgramSeeker
             else
                 response = wmicCall(@"/c wmic product get name,version"); // wmicCall(@"/c wmic /node:bh134_4889 /user:bh134_4889\" + txtUsername.Text + " /password:" + txtPassword.Text + " product get name");
 
-            foreach (string l in filterResponse(response))
-                softNode.Nodes.Add(l);
+            // Process the filtered into array of arrays
+            // I.E. Microsoft - Office, Visual Studio, DirectX, etc.
+
+            foreach (element l in filterResponse(response, out longest))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(l.getName());
+                sb.Append(" ".PadLeft(longest - (l.getName().Length + l.getVersion().Length)));
+                sb.Append(l.getVersion());
+                softNode.Nodes.Add(sb.ToString());
+                //softNode.Nodes.Add(l.getName() + new StringBuilder(" ".PadRight(longest - (l.getName().Length + l.getVersion().Length))) + l.getVersion());
+            }
 
             node = new TreeNode("nodeName");
             node.Nodes.Add(softNode);
-            treeNodes.Nodes.Add(node);
+            AddNode(node);
         }
 
-        private string[] filterResponse(string response)
+      // Working on this function to make nodes look nice
+        private List<element> filterResponse(string response, out int longest)
         {
-            string data;
+            longest = 0;
+            string temp;
             string [] lines = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            data = lines[0];
-            
-            Array.Sort<string>(lines);
-            return lines;
-            //System.IO.File.WriteAllText(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", "Logged at " + DateTime.Now.TimeOfDay);
-            //System.IO.File.AppendAllLines(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", lines);
+
+            List<element> data = new List<element>();
+            foreach(string l in lines)
+            {
+                temp = l.Trim(new char[] { ' ', '\r', '\t' });
+                if (!string.IsNullOrEmpty(temp))
+                {
+                    string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim();
+                    string version = temp.Substring(temp.LastIndexOf(" ")).Trim();
+                    data.Add(new element(name, version));
+                    if (name.Length + version.Length > longest)
+                        longest = name.Length + version.Length;
+                }
+            }
+
+            return data;
         }
 
         // Calls the WMIC command and returns the output
@@ -184,6 +206,41 @@ namespace ProgramSeeker
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listNodes.Items.RemoveAt(listNodes.SelectedIndex);
+        }
+
+        delegate void AddNodeCallback(TreeNode node);
+
+        private void AddNode(TreeNode node)
+        {
+            if (this.treeNodes.InvokeRequired)
+            {
+                AddNodeCallback c = new AddNodeCallback(AddNode);
+                this.Invoke(c, new object[] { node });
+            }
+            else
+                this.treeNodes.Nodes.Add(node);
+        }
+    }
+
+    public class element
+    {
+        string m_Name;
+        string m_Version;
+
+        public element(string name, string version)
+        {
+            m_Name = name;
+            m_Version = version;
+        }
+
+        public string getName()
+        {
+            return m_Name; 
+        }
+
+        public string getVersion()
+        {
+            return m_Version; 
         }
     }
 }
