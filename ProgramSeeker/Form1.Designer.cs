@@ -33,33 +33,33 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.contextStripNodes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.treeNodes = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.listNodes = new System.Windows.Forms.ListBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.txtSingleNode = new System.Windows.Forms.TextBox();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.txtSingleNode = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.listNodes = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.chkProdName = new System.Windows.Forms.CheckBox();
-            this.chkProdVer = new System.Windows.Forms.CheckBox();
-            this.chkSerialNum = new System.Windows.Forms.CheckBox();
-            this.chkModelName = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.chkModelName = new System.Windows.Forms.CheckBox();
+            this.chkSerialNum = new System.Windows.Forms.CheckBox();
+            this.chkProdVer = new System.Windows.Forms.CheckBox();
+            this.chkProdName = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.txtPath = new System.Windows.Forms.TextBox();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tabHost = new System.Windows.Forms.TabControl();
             this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.txtPath = new System.Windows.Forms.TextBox();
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tabHost = new System.Windows.Forms.TabControl();
             this.contextStripNodes.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -92,12 +92,12 @@
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
-            // treeView1
+            // treeNodes
             // 
-            this.treeView1.Location = new System.Drawing.Point(390, 12);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(802, 689);
-            this.treeView1.TabIndex = 11;
+            this.treeNodes.Location = new System.Drawing.Point(390, 12);
+            this.treeNodes.Name = "treeNodes";
+            this.treeNodes.Size = new System.Drawing.Size(802, 689);
+            this.treeNodes.TabIndex = 11;
             // 
             // tabPage4
             // 
@@ -113,16 +113,23 @@
             this.tabPage4.Text = "Targets";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // listNodes
+            // btnAdd
             // 
-            this.listNodes.FormattingEnabled = true;
-            this.listNodes.Location = new System.Drawing.Point(6, 3);
-            this.listNodes.Name = "listNodes";
-            this.listNodes.ScrollAlwaysVisible = true;
-            this.listNodes.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listNodes.Size = new System.Drawing.Size(283, 563);
-            this.listNodes.TabIndex = 0;
-            this.listNodes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listNodes_MouseUp);
+            this.btnAdd.Location = new System.Drawing.Point(3, 605);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.TabIndex = 3;
+            this.btnAdd.Text = "Add";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // txtSingleNode
+            // 
+            this.txtSingleNode.Location = new System.Drawing.Point(84, 607);
+            this.txtSingleNode.Name = "txtSingleNode";
+            this.txtSingleNode.Size = new System.Drawing.Size(205, 20);
+            this.txtSingleNode.TabIndex = 2;
+            this.txtSingleNode.TextChanged += new System.EventHandler(this.txtSingleNode_TextChanged);
             // 
             // button2
             // 
@@ -134,23 +141,16 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // txtSingleNode
+            // listNodes
             // 
-            this.txtSingleNode.Location = new System.Drawing.Point(84, 607);
-            this.txtSingleNode.Name = "txtSingleNode";
-            this.txtSingleNode.Size = new System.Drawing.Size(205, 20);
-            this.txtSingleNode.TabIndex = 2;
-            this.txtSingleNode.TextChanged += new System.EventHandler(this.txtSingleNode_TextChanged);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(3, 605);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 3;
-            this.btnAdd.Text = "Add";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.listNodes.FormattingEnabled = true;
+            this.listNodes.Location = new System.Drawing.Point(6, 3);
+            this.listNodes.Name = "listNodes";
+            this.listNodes.ScrollAlwaysVisible = true;
+            this.listNodes.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listNodes.Size = new System.Drawing.Size(283, 563);
+            this.listNodes.TabIndex = 0;
+            this.listNodes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listNodes_MouseUp);
             // 
             // tabPage3
             // 
@@ -168,56 +168,15 @@
             this.tabPage3.Text = "Output";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // chkProdName
+            // checkBox7
             // 
-            this.chkProdName.AutoSize = true;
-            this.chkProdName.Location = new System.Drawing.Point(23, 18);
-            this.chkProdName.Name = "chkProdName";
-            this.chkProdName.Size = new System.Drawing.Size(114, 17);
-            this.chkProdName.TabIndex = 0;
-            this.chkProdName.Text = "Get Product Name";
-            this.chkProdName.UseVisualStyleBackColor = true;
-            this.chkProdName.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // chkProdVer
-            // 
-            this.chkProdVer.AutoSize = true;
-            this.chkProdVer.Location = new System.Drawing.Point(23, 42);
-            this.chkProdVer.Name = "chkProdVer";
-            this.chkProdVer.Size = new System.Drawing.Size(121, 17);
-            this.chkProdVer.TabIndex = 1;
-            this.chkProdVer.Text = "Get Product Version";
-            this.chkProdVer.UseVisualStyleBackColor = true;
-            // 
-            // chkSerialNum
-            // 
-            this.chkSerialNum.AutoSize = true;
-            this.chkSerialNum.Location = new System.Drawing.Point(23, 66);
-            this.chkSerialNum.Name = "chkSerialNum";
-            this.chkSerialNum.Size = new System.Drawing.Size(112, 17);
-            this.chkSerialNum.TabIndex = 2;
-            this.chkSerialNum.Text = "Get Serial Number";
-            this.chkSerialNum.UseVisualStyleBackColor = true;
-            // 
-            // chkModelName
-            // 
-            this.chkModelName.AutoSize = true;
-            this.chkModelName.Location = new System.Drawing.Point(23, 90);
-            this.chkModelName.Name = "chkModelName";
-            this.chkModelName.Size = new System.Drawing.Size(106, 17);
-            this.chkModelName.TabIndex = 3;
-            this.chkModelName.Text = "Get Model Name";
-            this.chkModelName.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(23, 114);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(80, 17);
-            this.checkBox5.TabIndex = 4;
-            this.checkBox5.Text = "checkBox5";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.Location = new System.Drawing.Point(23, 162);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(80, 17);
+            this.checkBox7.TabIndex = 6;
+            this.checkBox7.Text = "checkBox7";
+            this.checkBox7.UseVisualStyleBackColor = true;
             // 
             // checkBox6
             // 
@@ -229,15 +188,56 @@
             this.checkBox6.Text = "checkBox6";
             this.checkBox6.UseVisualStyleBackColor = true;
             // 
-            // checkBox7
+            // checkBox5
             // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(23, 162);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(80, 17);
-            this.checkBox7.TabIndex = 6;
-            this.checkBox7.Text = "checkBox7";
-            this.checkBox7.UseVisualStyleBackColor = true;
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(23, 114);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(80, 17);
+            this.checkBox5.TabIndex = 4;
+            this.checkBox5.Text = "checkBox5";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // chkModelName
+            // 
+            this.chkModelName.AutoSize = true;
+            this.chkModelName.Location = new System.Drawing.Point(23, 90);
+            this.chkModelName.Name = "chkModelName";
+            this.chkModelName.Size = new System.Drawing.Size(106, 17);
+            this.chkModelName.TabIndex = 3;
+            this.chkModelName.Text = "Get Model Name";
+            this.chkModelName.UseVisualStyleBackColor = true;
+            // 
+            // chkSerialNum
+            // 
+            this.chkSerialNum.AutoSize = true;
+            this.chkSerialNum.Location = new System.Drawing.Point(23, 66);
+            this.chkSerialNum.Name = "chkSerialNum";
+            this.chkSerialNum.Size = new System.Drawing.Size(112, 17);
+            this.chkSerialNum.TabIndex = 2;
+            this.chkSerialNum.Text = "Get Serial Number";
+            this.chkSerialNum.UseVisualStyleBackColor = true;
+            // 
+            // chkProdVer
+            // 
+            this.chkProdVer.AutoSize = true;
+            this.chkProdVer.Location = new System.Drawing.Point(23, 42);
+            this.chkProdVer.Name = "chkProdVer";
+            this.chkProdVer.Size = new System.Drawing.Size(121, 17);
+            this.chkProdVer.TabIndex = 1;
+            this.chkProdVer.Text = "Get Product Version";
+            this.chkProdVer.UseVisualStyleBackColor = true;
+            // 
+            // chkProdName
+            // 
+            this.chkProdName.AutoSize = true;
+            this.chkProdName.Location = new System.Drawing.Point(23, 18);
+            this.chkProdName.Name = "chkProdName";
+            this.chkProdName.Size = new System.Drawing.Size(114, 17);
+            this.chkProdName.TabIndex = 0;
+            this.chkProdName.Text = "Get Product Name";
+            this.chkProdName.UseVisualStyleBackColor = true;
+            this.chkProdName.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // tabPage1
             // 
@@ -260,22 +260,37 @@
             this.tabPage1.Text = "Options";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // label6
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Password:";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(85, 96);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(58, 13);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "Output File";
             // 
-            // txtPassword
+            // label5
             // 
-            this.txtPassword.Location = new System.Drawing.Point(88, 61);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(178, 20);
-            this.txtPassword.TabIndex = 1;
-            this.txtPassword.TextChanged += new System.EventHandler(this.validateOptions);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(85, 12);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 13);
+            this.label5.TabIndex = 19;
+            this.label5.Text = "Login Information";
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(88, 153);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(179, 20);
+            this.txtName.TabIndex = 18;
+            // 
+            // txtPath
+            // 
+            this.txtPath.Location = new System.Drawing.Point(88, 127);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(153, 20);
+            this.txtPath.TabIndex = 17;
             // 
             // txtUsername
             // 
@@ -285,32 +300,13 @@
             this.txtUsername.TabIndex = 0;
             this.txtUsername.TextChanged += new System.EventHandler(this.validateOptions);
             // 
-            // label1
+            // txtPassword
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 38);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Username:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 130);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Output Folder:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(30, 156);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Filename:";
+            this.txtPassword.Location = new System.Drawing.Point(88, 61);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(178, 20);
+            this.txtPassword.TabIndex = 1;
+            this.txtPassword.TextChanged += new System.EventHandler(this.validateOptions);
             // 
             // button1
             // 
@@ -321,28 +317,41 @@
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // txtPath
+            // label4
             // 
-            this.txtPath.Location = new System.Drawing.Point(88, 127);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(153, 20);
-            this.txtPath.TabIndex = 17;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(30, 156);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(52, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Filename:";
             // 
-            // txtName
+            // label3
             // 
-            this.txtName.Location = new System.Drawing.Point(88, 153);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(179, 20);
-            this.txtName.TabIndex = 18;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 130);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Output Folder:";
             // 
-            // label5
+            // label1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(85, 12);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
-            this.label5.TabIndex = 19;
-            this.label5.Text = "Login Information";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 38);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Username:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 64);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Password:";
             // 
             // tabHost
             // 
@@ -355,21 +364,12 @@
             this.tabHost.Size = new System.Drawing.Size(303, 660);
             this.tabHost.TabIndex = 9;
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(85, 96);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 13);
-            this.label6.TabIndex = 20;
-            this.label6.Text = "Output File";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1204, 713);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.treeNodes);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.tabHost);
             this.Name = "Form1";
@@ -392,7 +392,7 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.ContextMenuStrip contextStripNodes;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView treeNodes;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TextBox txtSingleNode;

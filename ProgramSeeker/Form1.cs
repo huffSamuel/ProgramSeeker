@@ -67,36 +67,44 @@ namespace ProgramSeeker
             Stopwatch sw = new Stopwatch();
             string response = "";
             if (chkProdName.Checked)
-            {
-                sw.Start();
-                if (chkProdVer.Checked)
-                {
-                    response = wmicCall(@"/c wmic product get name,version");
-                }
-                else
-                {
-                    response = wmicCall(@"/c wmic /node:bh134_4889 /user:bh134_4889\" + txtUsername.Text + " /password:" + txtPassword.Text + " product get name");
-                }
-                sw.Stop();
-            }
-
-            filterResponse(response);
+                getSoftware();
 
             MessageBox.Show("Finished in " + sw.Elapsed +" seconds");
         }
 
-        private void filterResponse(string response)
+        private void getSoftware()
+        {
+            TreeNode softNode = new TreeNode("Software");
+            TreeNode node;
+            string response = "";
+
+            if (chkProdVer.Checked)
+                response = wmicCall(@"/c wmic product get name,version");
+            else
+                response = wmicCall(@"/c wmic product get name,version"); // wmicCall(@"/c wmic /node:bh134_4889 /user:bh134_4889\" + txtUsername.Text + " /password:" + txtPassword.Text + " product get name");
+
+            foreach (string l in filterResponse(response))
+                softNode.Nodes.Add(l);
+
+            node = new TreeNode("nodeName");
+            node.Nodes.Add(softNode);
+            treeNodes.Nodes.Add(node);
+        }
+
+        private string[] filterResponse(string response)
         {
             string data;
             string [] lines = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             data = lines[0];
             
             Array.Sort<string>(lines);
-            System.IO.File.WriteAllText(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", "Logged at " + DateTime.Now.TimeOfDay);
-            System.IO.File.AppendAllLines(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", lines);
+            return lines;
+            //System.IO.File.WriteAllText(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", "Logged at " + DateTime.Now.TimeOfDay);
+            //System.IO.File.AppendAllLines(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", lines);
         }
 
         // Calls the WMIC command and returns the output
+        // TODO: Thread this
         private string wmicCall(string args)
         {
             string val = "";

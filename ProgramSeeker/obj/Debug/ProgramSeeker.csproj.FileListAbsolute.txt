@@ -11,3 +11,16 @@ C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeek
 C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\ProdVer.cmd
 C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Serial.cmd
 C:\Users\telecom\documents\visual studio 2012\Projects\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe.config
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.exe
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.pdb
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Model.cmd
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Prod.cmd
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\ProdVer.cmd
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\resources\Serial.cmd
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.pdb
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
+T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
