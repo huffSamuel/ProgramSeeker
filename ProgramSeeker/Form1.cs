@@ -17,16 +17,17 @@ namespace ProgramSeeker
     public partial class Form1 : Form
     {
         private string folderName;
-        private string val = "";
 
         public Form1()
         {
             InitializeComponent();
             txtPassword.PasswordChar = '*';
             //btnStart.Enabled = false;
-            checkBox2.Enabled = false;
+            btnAdd.Enabled = false;
+            chkProdVer.Enabled = false;
         }
 
+        // Selects the destination of the output
         private void button1_Click_1(object sender, EventArgs e)
         {
             folderBrowserDialog1 = new FolderBrowserDialog();
@@ -40,62 +41,92 @@ namespace ProgramSeeker
             }
         }
 
+        // Runs to enable/disable the start button
         private void validateOptions(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtPath.Text) ||
-                string.IsNullOrEmpty(txtName.Text) ||
-                string.IsNullOrEmpty(txtPassword.Text) ||
-                string.IsNullOrEmpty(txtUsername.Text))
-            {
-                btnStart.Enabled = false;
-            }
-            else
+            //if (string.IsNullOrEmpty(txtPath.Text) ||           // Output path is empty
+            //    string.IsNullOrEmpty(txtName.Text) ||           // Output filename is empty
+            //    string.IsNullOrEmpty(txtPassword.Text) ||       // Password is empty
+            //    string.IsNullOrEmpty(txtUsername.Text))         // Username is empty
+            //{
+            //    btnStart.Enabled = false;                       // Don't allow the query to run
+            //}
+            //else
                 btnStart.Enabled = true;
         }
 
+
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
-            {
-                checkBox2.Enabled = true;
-            }
-            else
-                checkBox2.Enabled = false;
+            chkProdVer.Enabled = chkProdName.Checked;
         }
 
+        // Go.
         private void btnStart_Click(object sender, EventArgs e)
         {
-            System.IO.File.WriteAllText(@"C:\Users\telecom\Downloads\test.cmd", "wmic csproduct get name");
-            System.IO.File.WriteAllText(@"C:\Users\Telecom\Desktop\Output.txt", "Gathered Information:");
-
-            Process p = new Process();
-            val = "";
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.FileName = "C:\\Users\\telecom\\Downloads\\test.cmd";
-
-            p.Start();
-            val += p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-            /* This scans for everything and sorts it */
-            string[] lines = val.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            Array.Sort(lines, (x, y) => String.Compare(x, y));
-            foreach (string l in lines)
+            Stopwatch sw = new Stopwatch();
+            string response = "";
+            if (chkProdName.Checked)
             {
-                if (!l.StartsWith("C:\\") && !string.IsNullOrEmpty(l))
+                sw.Start();
+                if (chkProdVer.Checked)
                 {
-                    System.IO.File.AppendAllText(@"C:\Users\Telecom\Desktop\Output.txt", l + Environment.NewLine);
+                    response = wmicCall(@"/c wmic product get name,version");
                 }
+                else
+                {
+                    response = wmicCall(@"/c wmic /node:bh134_4889 /user:bh134_4889\" + txtUsername.Text + " /password:" + txtPassword.Text + " product get name");
+                }
+                sw.Stop();
             }
-            MessageBox.Show("Finished");
+
+            filterResponse(response);
+
+            MessageBox.Show("Finished in " + sw.Elapsed +" seconds");
         }
 
+        private void filterResponse(string response)
+        {
+            string data;
+            string [] lines = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            data = lines[0];
+            
+            Array.Sort<string>(lines);
+            System.IO.File.WriteAllText(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", "Logged at " + DateTime.Now.TimeOfDay);
+            System.IO.File.AppendAllLines(@"C:\Users\Telecom\Desktop\ProgramSeeker.txt", lines);
+        }
+
+        // Calls the WMIC command and returns the output
+        private string wmicCall(string args)
+        {
+            string val = "";
+
+            ProcessStartInfo psi = new ProcessStartInfo("cmd", args)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = false,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = false,
+            };
+
+            Process reg = new Process();
+            reg.StartInfo = psi;
+
+            reg.Start();
+            using (System.IO.StreamReader output = reg.StandardOutput)
+            {
+                val += output.ReadToEnd();
+            }
+
+            return val;
+        }
+
+        // Import remote nodes
         private void button2_Click(object sender, EventArgs e)
         {
             string line;
             MessageBox.Show("Select text file that contains a raw paste of SCCM all items.");
-            OpenFileDialog ofd = new OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog();                              
             ofd.Filter = "Text Files (.txt)|*.txt|All Files(*.*)|*.*";
             ofd.FilterIndex = 1;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -112,6 +143,39 @@ namespace ProgramSeeker
                     listNodes.Items.Add(line);
                 }
             }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            listNodes.Items.Add(txtSingleNode.Text.Trim());
+            txtSingleNode.Text = "";
+        }
+
+        
+        private void txtSingleNode_TextChanged(object sender, EventArgs e)
+        {
+            btnAdd.Enabled = !string.IsNullOrEmpty(txtSingleNode.Text);
+        }
+
+        // Trap mouse-up events for context menu
+        private void listNodes_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int index = this.listNodes.IndexFromPoint(e.Location);
+                listNodes.ClearSelected();
+                if (index != ListBox.NoMatches)
+                {
+                    listNodes.SelectedIndex = index;
+                    contextStripNodes.Show(listNodes, e.Location);
+                }
+            }
+        }
+
+        // Context menu for removing item from list of nodes to scan
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listNodes.Items.RemoveAt(listNodes.SelectedIndex);
         }
     }
 }
