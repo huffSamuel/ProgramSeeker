@@ -1,1 +1,0 @@
-﻿wmic product get name

@@ -1,1 +1,0 @@
-﻿wmic csproduct get name

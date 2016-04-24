@@ -17,14 +17,35 @@ namespace ProgramSeeker
     public partial class Form1 : Form
     {
         private string folderName;
+        private System.ComponentModel.BackgroundWorker backWorker = new System.ComponentModel.BackgroundWorker();
 
         public Form1()
         {
             InitializeComponent();
+            InitializeWorker();
             txtPassword.PasswordChar = '*';
             //btnStart.Enabled = false;
             btnAdd.Enabled = false;
             chkProdVer.Enabled = false;
+        }
+
+        private void InitializeWorker()
+        {
+            backWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(backWorker_DoWork);
+            backWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(backWorker_Completed);
+        }
+
+        private void backWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            WMIC wmic = (WMIC)e.Argument;
+            e.Result = getSoftware(wmic.getName());
+        }
+
+        private void backWorker_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            MessageBox.Show("Finished");
+            TreeNode t = (TreeNode)e.Result;
+            AddNode(t);
         }
 
         // Selects the destination of the output
@@ -64,14 +85,12 @@ namespace ProgramSeeker
         // Go.
         private void btnStart_Click(object sender, EventArgs e)
         {
-            Stopwatch sw = new Stopwatch();
-            if (chkProdName.Checked)
-                getSoftware();
-
-            MessageBox.Show("Finished in " + sw.Elapsed +" seconds");
+            WMIC wmic = new WMIC("Thor", "", "", true);
+            if(!backWorker.IsBusy)
+                backWorker.RunWorkerAsync(wmic);
         }
 
-        private void getSoftware()
+        private TreeNode getSoftware(string nodeName)
         {
             TreeNode softNode = new TreeNode("Software");
             TreeNode node;
@@ -86,29 +105,27 @@ namespace ProgramSeeker
             // Process the filtered into array of arrays
             // I.E. Microsoft - Office, Visual Studio, DirectX, etc.
 
-            foreach (element l in filterResponse(response, out longest))
+            foreach (string l in filterResponse(response, out longest))
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(l.getName());
-                sb.Append(" ".PadLeft(longest - (l.getName().Length + l.getVersion().Length)));
-                sb.Append(l.getVersion());
-                softNode.Nodes.Add(sb.ToString());
+                if(!string.IsNullOrEmpty(l.Trim()))
+                    softNode.Nodes.Add(l);
                 //softNode.Nodes.Add(l.getName() + new StringBuilder(" ".PadRight(longest - (l.getName().Length + l.getVersion().Length))) + l.getVersion());
             }
 
-            node = new TreeNode("nodeName");
+            node = new TreeNode(nodeName);
             node.Nodes.Add(softNode);
-            AddNode(node);
+            return node;
         }
 
-      // Working on this function to make nodes look nice
-        private List<element> filterResponse(string response, out int longest)
+        // Todo: Align version to make list look nicer
+        private string[] filterResponse(string response, out int longest)
         {
             longest = 0;
             string temp;
+            int offset = 0;
             string [] lines = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            
 
-            List<element> data = new List<element>();
             foreach(string l in lines)
             {
                 temp = l.Trim(new char[] { ' ', '\r', '\t' });
@@ -116,13 +133,17 @@ namespace ProgramSeeker
                 {
                     string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim();
                     string version = temp.Substring(temp.LastIndexOf(" ")).Trim();
-                    data.Add(new element(name, version));
+                    lines[offset] = name + " " + version;
                     if (name.Length + version.Length > longest)
                         longest = name.Length + version.Length;
+                    offset++;
                 }
+                
             }
 
-            return data;
+            Array.Sort(lines);
+
+            return lines;
         }
 
         // Calls the WMIC command and returns the output
@@ -137,6 +158,7 @@ namespace ProgramSeeker
                 RedirectStandardError = false,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
+                CreateNoWindow = true
             };
 
             Process reg = new Process();
@@ -210,7 +232,7 @@ namespace ProgramSeeker
 
         delegate void AddNodeCallback(TreeNode node);
 
-        private void AddNode(TreeNode node)
+        public void AddNode(TreeNode node)
         {
             if (this.treeNodes.InvokeRequired)
             {
@@ -219,28 +241,6 @@ namespace ProgramSeeker
             }
             else
                 this.treeNodes.Nodes.Add(node);
-        }
-    }
-
-    public class element
-    {
-        string m_Name;
-        string m_Version;
-
-        public element(string name, string version)
-        {
-            m_Name = name;
-            m_Version = version;
-        }
-
-        public string getName()
-        {
-            return m_Name; 
-        }
-
-        public string getVersion()
-        {
-            return m_Version; 
         }
     }
 }
