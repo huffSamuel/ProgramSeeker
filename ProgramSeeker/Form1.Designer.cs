@@ -60,11 +60,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabHost = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.treeSoftware = new System.Windows.Forms.TreeView();
             this.contextStripNodes.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabHost.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -94,9 +101,10 @@
             // 
             // treeNodes
             // 
-            this.treeNodes.Location = new System.Drawing.Point(390, 12);
+            this.treeNodes.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.treeNodes.Location = new System.Drawing.Point(-4, 0);
             this.treeNodes.Name = "treeNodes";
-            this.treeNodes.Size = new System.Drawing.Size(802, 689);
+            this.treeNodes.Size = new System.Drawing.Size(840, 667);
             this.treeNodes.TabIndex = 11;
             // 
             // tabPage4
@@ -364,12 +372,52 @@
             this.tabHost.Size = new System.Drawing.Size(303, 660);
             this.tabHost.TabIndex = 9;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Location = new System.Drawing.Point(352, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(840, 689);
+            this.tabControl1.TabIndex = 12;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.treeNodes);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(832, 663);
+            this.tabPage2.TabIndex = 0;
+            this.tabPage2.Text = "Nodes";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.treeSoftware);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(832, 663);
+            this.tabPage5.TabIndex = 1;
+            this.tabPage5.Text = "Software";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // treeSoftware
+            // 
+            this.treeSoftware.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.treeSoftware.Location = new System.Drawing.Point(-4, 0);
+            this.treeSoftware.Name = "treeSoftware";
+            this.treeSoftware.Size = new System.Drawing.Size(836, 667);
+            this.treeSoftware.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1204, 713);
-            this.Controls.Add(this.treeNodes);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.tabHost);
             this.Name = "Form1";
@@ -382,6 +430,9 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabHost.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -419,6 +470,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TabControl tabHost;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TreeView treeSoftware;
     }
 }
 

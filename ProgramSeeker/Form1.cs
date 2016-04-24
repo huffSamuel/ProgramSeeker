@@ -94,7 +94,6 @@ namespace ProgramSeeker
         {
             TreeNode softNode = new TreeNode("Software");
             TreeNode node;
-            int longest = 0;
             string response = "";
 
             if (chkProdVer.Checked)
@@ -105,10 +104,13 @@ namespace ProgramSeeker
             // Process the filtered into array of arrays
             // I.E. Microsoft - Office, Visual Studio, DirectX, etc.
 
-            foreach (string l in filterResponse(response, out longest))
+            foreach (string l in filterResponse(response))
             {
-                if(!string.IsNullOrEmpty(l.Trim()))
+                if (!string.IsNullOrEmpty(l.Trim()))
+                {
                     softNode.Nodes.Add(l);
+                    AddToSoftware(l);
+                }
                 //softNode.Nodes.Add(l.getName() + new StringBuilder(" ".PadRight(longest - (l.getName().Length + l.getVersion().Length))) + l.getVersion());
             }
 
@@ -117,14 +119,31 @@ namespace ProgramSeeker
             return node;
         }
 
-        // Todo: Align version to make list look nicer
-        private string[] filterResponse(string response, out int longest)
+        private void AddToSoftware(string software)
         {
-            longest = 0;
+            bool found = false;
+            foreach(TreeNode n in treeSoftware.Nodes)
+            {
+                if((string)n.Tag == software)
+                {
+                    found = true;
+                    UpdateNodeText(n);
+                }
+            }
+            if(!found)
+            {
+                TreeNode node = new TreeNode(software + "  :1");
+                node.Tag = software;
+                AddSoftwareNode(node);
+            }
+        }
+
+        // Todo: Align version to make list look nicer
+        private string[] filterResponse(string response)
+        { 
             string temp;
             int offset = 0;
             string [] lines = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            
 
             foreach(string l in lines)
             {
@@ -133,12 +152,10 @@ namespace ProgramSeeker
                 {
                     string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim();
                     string version = temp.Substring(temp.LastIndexOf(" ")).Trim();
-                    lines[offset] = name + " " + version;
-                    if (name.Length + version.Length > longest)
-                        longest = name.Length + version.Length;
+                    lines[offset] = name + "\t\t" + version;
+
                     offset++;
                 }
-                
             }
 
             Array.Sort(lines);
@@ -230,6 +247,8 @@ namespace ProgramSeeker
             listNodes.Items.RemoveAt(listNodes.SelectedIndex);
         }
 
+        delegate void UpdateNodeTextCallback(TreeNode node);
+        delegate void AddSoftwareNodeCallback(TreeNode node);
         delegate void AddNodeCallback(TreeNode node);
 
         public void AddNode(TreeNode node)
@@ -241,6 +260,32 @@ namespace ProgramSeeker
             }
             else
                 this.treeNodes.Nodes.Add(node);
+        }
+
+        public void AddSoftwareNode(TreeNode node)
+        {
+            if (this.treeSoftware.InvokeRequired)
+            {
+                AddSoftwareNodeCallback c = new AddSoftwareNodeCallback(AddSoftwareNode);
+                this.Invoke(c, new object[] { node });
+            }
+            else
+                this.treeSoftware.Nodes.Add(node);
+        }
+
+        public void UpdateNodeText(TreeNode node)
+        {
+            if(this.treeSoftware.InvokeRequired)
+            {
+                UpdateNodeTextCallback c = new UpdateNodeTextCallback(UpdateNodeText);
+                this.Invoke(c, new object[] { node });
+            }
+            else
+            {
+                TreeNode n = this.treeSoftware.Nodes[this.treeSoftware.Nodes.IndexOf(node)];
+                int count = Int32.Parse(n.Text.Substring(n.Text.LastIndexOf(":") + 1)) + 1;
+                n.Text = n.Text.Substring(0, n.Text.LastIndexOf(":") + 1) + count.ToString();
+            }
         }
     }
 }
