@@ -25,10 +25,21 @@ namespace ProgramSeeker
             m_Password = pwd;
             m_getVersion = ver;
         }
-        
+
         public string createQuery()
         {
             return @"/c wmic product get name, version";
+        }
+
+        public string createSoftwareQuery(bool getVersion)
+        {
+            string val = "";
+            if (m_nodeName.ToLower() == Environment.MachineName.ToLower())
+                val = @"/c wmic product get name" + (getVersion ? ",version" : "");
+            else
+                val = @"/c wmic /node:" + m_nodeName + " /user:" + m_nodeName + @"\" + m_Username + " /password:\"" + m_Password + "\" product get name" + (getVersion ? ",version" : "");
+
+            return val;
         }
 
         public string getName()

@@ -27,28 +27,52 @@ namespace ProgramSeeker
             //btnStart.Enabled = false;
             btnAdd.Enabled = false;
             chkProdVer.Enabled = false;
+            progressScan.Style = ProgressBarStyle.Marquee;
+            progressScan.MarqueeAnimationSpeed = 0;
+            progressScan.Maximum = 20;
+            progressScan.Step = 1;
         }
 
+        /// <summary>
+        /// Initializes the background worker for running our WMIC process
+        /// ToDo: Potentially switch to using the Task parallel library instead of BackgroundWorker
+        /// </summary>
         private void InitializeWorker()
         {
             backWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(backWorker_DoWork);
             backWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(backWorker_Completed);
         }
 
+        /// <summary>
+        /// Triggers the WMIC process on a BackgroundWorker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             WMIC wmic = (WMIC)e.Argument;
-            e.Result = getSoftware(wmic.getName());
+            e.Result = getSoftware(wmic);
         }
 
+        /// <summary>
+        /// Called when the WMIC process returns
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backWorker_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Finished");
+            //progressScan.PerformStep();
             TreeNode t = (TreeNode)e.Result;
             AddNode(t);
+            progressScan.MarqueeAnimationSpeed = 0;
         }
 
-        // Selects the destination of the output
+        /// <summary>
+        /// Selects a folder for file output
+        /// Note: Will become obselete after Excel Export is integrated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click_1(object sender, EventArgs e)
         {
             folderBrowserDialog1 = new FolderBrowserDialog();
@@ -62,63 +86,76 @@ namespace ProgramSeeker
             }
         }
 
-        // Runs to enable/disable the start button
+        /// <summary>
+        /// Depricated. Remains to prevent current refactor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void validateOptions(object sender, EventArgs e)
         {
-            //if (string.IsNullOrEmpty(txtPath.Text) ||           // Output path is empty
-            //    string.IsNullOrEmpty(txtName.Text) ||           // Output filename is empty
-            //    string.IsNullOrEmpty(txtPassword.Text) ||       // Password is empty
-            //    string.IsNullOrEmpty(txtUsername.Text))         // Username is empty
-            //{
-            //    btnStart.Enabled = false;                       // Don't allow the query to run
-            //}
-            //else
-                btnStart.Enabled = true;
+            btnStart.Enabled = true;
         }
 
-
+        /// <summary>
+        /// Enables and disables the product version checkbox based on product name checkbox status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             chkProdVer.Enabled = chkProdName.Checked;
         }
 
-        // Go.
+        /// <summary>
+        /// Runs the actual WMIC query.
+        /// ToDo: Update so it runs on all available nodes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
-            WMIC wmic = new WMIC("Thor", "", "", true);
+            progressScan.MarqueeAnimationSpeed = 20;
+
+            WMIC wmic = new WMIC(listNodes.Items[0].ToString(), txtUsername.Text, txtPassword.Text, true);
             if(!backWorker.IsBusy)
                 backWorker.RunWorkerAsync(wmic);
         }
 
-        private TreeNode getSoftware(string nodeName)
+        /// <summary>
+        /// Gets a list of software from the target node.
+        /// ToDo: Configure for adaptable WMIC calls rather than hard coded.
+        /// </summary>
+        /// <param name="nodeName"></param>
+        /// <returns></returns>
+        private TreeNode getSoftware(WMIC wmic)
         {
             TreeNode softNode = new TreeNode("Software");
             TreeNode node;
             string response = "";
 
-            if (chkProdVer.Checked)
-                response = wmicCall(@"/c wmic product get name,version");
-            else
-                response = wmicCall(@"/c wmic product get name,version"); // wmicCall(@"/c wmic /node:bh134_4889 /user:bh134_4889\" + txtUsername.Text + " /password:" + txtPassword.Text + " product get name");
-
-            // Process the filtered into array of arrays
-            // I.E. Microsoft - Office, Visual Studio, DirectX, etc.
-
+            response = wmicCall(wmic.createSoftwareQuery(chkProdVer.Checked));
+            
             foreach (string l in filterResponse(response))
             {
                 if (!string.IsNullOrEmpty(l.Trim()))
                 {
-                    softNode.Nodes.Add(l);
+                    TreeNode n = new TreeNode(l.Substring(0, l.LastIndexOf(" ")));
+                    n.Nodes.Add("Version: " + l.Substring(l.LastIndexOf(" ")));
+                    softNode.Nodes.Add(n);
+
                     AddToSoftware(l);
                 }
-                //softNode.Nodes.Add(l.getName() + new StringBuilder(" ".PadRight(longest - (l.getName().Length + l.getVersion().Length))) + l.getVersion());
             }
 
-            node = new TreeNode(nodeName);
+            node = new TreeNode(wmic.getName());
             node.Nodes.Add(softNode);
             return node;
         }
 
+        /// <summary>
+        /// Adds a software node to the tree of all software.
+        /// </summary>
+        /// <param name="software"></param>
         private void AddToSoftware(string software)
         {
             bool found = false;
@@ -127,18 +164,26 @@ namespace ProgramSeeker
                 if((string)n.Tag == software)
                 {
                     found = true;
+                    // If the node is found update the node's count
                     UpdateNodeText(n);
                 }
             }
+
+            //If the node is not found add it
             if(!found)
             {
-                TreeNode node = new TreeNode(software + "  :1");
-                node.Tag = software;
+                TreeNode node = new TreeNode(software) { Tag = software };
+                node.Nodes.Add(new TreeNode("Count: 1") { Tag = "Count" });
                 AddSoftwareNode(node);
             }
         }
 
-        // Todo: Align version to make list look nicer
+        /// <summary>
+        /// Filters the response from the WMIC call to remove extra whitespace
+        /// ToDo: Adapt to using a class to contain information (ISoftware, INode, IBios, etc)
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         private string[] filterResponse(string response)
         { 
             string temp;
@@ -147,10 +192,10 @@ namespace ProgramSeeker
 
             foreach(string l in lines)
             {
-                temp = l.Trim(new char[] { ' ', '\r', '\t' });
+                temp = l.Trim();
                 if (!string.IsNullOrEmpty(temp))
                 {
-                    string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim();
+                    string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim() + " ";
                     string version = temp.Substring(temp.LastIndexOf(" ")).Trim();
                     lines[offset] = name + "\t\t" + version;
 
@@ -163,8 +208,11 @@ namespace ProgramSeeker
             return lines;
         }
 
-        // Calls the WMIC command and returns the output
-        // TODO: Thread this
+        /// <summary>
+        /// Executes the WMIC call on a new process and captures the output.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>String of output text from the process</returns>
         private string wmicCall(string args)
         {
             string val = "";
@@ -190,7 +238,11 @@ namespace ProgramSeeker
             return val;
         }
 
-        // Import remote nodes
+        /// <summary>
+        /// Imports nodes from a text file. Regex removes data from an SCCM copy+pase txt file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             string line;
@@ -214,19 +266,32 @@ namespace ProgramSeeker
             }
         }
 
+        /// <summary>
+        /// Manually adds a node to the node list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAdd_Click(object sender, EventArgs e)
         {
             listNodes.Items.Add(txtSingleNode.Text.Trim());
             txtSingleNode.Text = "";
         }
 
-        
+        /// <summary>
+        /// Enables the addNode button if the addNode textbox is not empty
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtSingleNode_TextChanged(object sender, EventArgs e)
         {
             btnAdd.Enabled = !string.IsNullOrEmpty(txtSingleNode.Text);
         }
 
-        // Trap mouse-up events for context menu
+        /// <summary>
+        /// Traps mouse events in the listNodes treeview to display the remove context menu for nodes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listNodes_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -241,16 +306,37 @@ namespace ProgramSeeker
             }
         }
 
-        // Context menu for removing item from list of nodes to scan
+        /// <summary>
+        /// Handler for the context menu remove option
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listNodes.Items.RemoveAt(listNodes.SelectedIndex);
         }
-
+        /// <summary>
+        /// Delegate for UpdateNodeText
+        /// </summary>
+        /// <param name="node"></param>
         delegate void UpdateNodeTextCallback(TreeNode node);
+
+        /// <summary>
+        /// Delegate for AddSoftwareNode
+        /// </summary>
+        /// <param name="node"></param>
         delegate void AddSoftwareNodeCallback(TreeNode node);
+
+        /// <summary>
+        /// Delegate for AddNode
+        /// </summary>
+        /// <param name="node"></param>
         delegate void AddNodeCallback(TreeNode node);
 
+        /// <summary>
+        /// Adds a node to treeNodes
+        /// </summary>
+        /// <param name="node"></param>
         public void AddNode(TreeNode node)
         {
             if (this.treeNodes.InvokeRequired)
@@ -262,6 +348,10 @@ namespace ProgramSeeker
                 this.treeNodes.Nodes.Add(node);
         }
 
+        /// <summary>
+        /// Adds a node to treeSoftware
+        /// </summary>
+        /// <param name="node"></param>
         public void AddSoftwareNode(TreeNode node)
         {
             if (this.treeSoftware.InvokeRequired)
@@ -273,6 +363,10 @@ namespace ProgramSeeker
                 this.treeSoftware.Nodes.Add(node);
         }
 
+        /// <summary>
+        /// Updates the text of a node in treeSoftware
+        /// </summary>
+        /// <param name="node"></param>
         public void UpdateNodeText(TreeNode node)
         {
             if(this.treeSoftware.InvokeRequired)
@@ -283,8 +377,14 @@ namespace ProgramSeeker
             else
             {
                 TreeNode n = this.treeSoftware.Nodes[this.treeSoftware.Nodes.IndexOf(node)];
-                int count = Int32.Parse(n.Text.Substring(n.Text.LastIndexOf(":") + 1)) + 1;
-                n.Text = n.Text.Substring(0, n.Text.LastIndexOf(":") + 1) + count.ToString();
+                foreach (TreeNode child in n.Nodes)
+                {
+                    if ((string)child.Tag == "Count")
+                    {
+                        child.Text = child.Text.Substring(0, child.Text.LastIndexOf(":") + 1) + (Int32.Parse(child.Text.Substring(child.Text.LastIndexOf(":") + 1)) + 1).ToString();
+                        break;
+                    }
+                }
             }
         }
     }

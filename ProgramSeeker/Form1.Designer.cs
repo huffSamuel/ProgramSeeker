@@ -64,6 +64,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.treeSoftware = new System.Windows.Forms.TreeView();
+            this.progressScan = new System.Windows.Forms.ProgressBar();
             this.contextStripNodes.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -104,7 +105,7 @@
             this.treeNodes.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeNodes.Location = new System.Drawing.Point(-4, 0);
             this.treeNodes.Name = "treeNodes";
-            this.treeNodes.Size = new System.Drawing.Size(840, 667);
+            this.treeNodes.Size = new System.Drawing.Size(833, 667);
             this.treeNodes.TabIndex = 11;
             // 
             // tabPage4
@@ -412,11 +413,19 @@
             this.treeSoftware.Size = new System.Drawing.Size(836, 667);
             this.treeSoftware.TabIndex = 0;
             // 
+            // progressScan
+            // 
+            this.progressScan.Location = new System.Drawing.Point(94, 678);
+            this.progressScan.Name = "progressScan";
+            this.progressScan.Size = new System.Drawing.Size(217, 23);
+            this.progressScan.TabIndex = 13;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1204, 713);
+            this.Controls.Add(this.progressScan);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.tabHost);
@@ -474,6 +483,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TreeView treeSoftware;
+        private System.Windows.Forms.ProgressBar progressScan;
     }
 }
 
