@@ -2,7 +2,7 @@
 
 ProgramSeeker is a GUI utility for the command-line WMIC utility. It's initial purpose was to scan all nodes on a network to retrieve currently installed software.
 
-###Features
+####Features
 
 V0.1: 
 * Get Software and Version
@@ -11,7 +11,7 @@ V0.1:
 * Allows username and password for remote nodes
 * Import nodes from text file
 
-###Planned Features
+####Planned Features
 * Get PC Model and Serial Number
 * Get Usernames
 * Export report (Excel, CSV, XML)
