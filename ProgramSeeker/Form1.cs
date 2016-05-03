@@ -16,6 +16,7 @@ namespace ProgramSeeker
 {
     public partial class Form1 : Form
     {
+        private int running;
         private string folderName;
         private System.ComponentModel.BackgroundWorker backWorker = new System.ComponentModel.BackgroundWorker();
 
@@ -24,13 +25,10 @@ namespace ProgramSeeker
             InitializeComponent();
             InitializeWorker();
             txtPassword.PasswordChar = '*';
-            //btnStart.Enabled = false;
             btnAdd.Enabled = false;
-            chkProdVer.Enabled = false;
+            chkProdName.Checked = true;     // Get product by default
             progressScan.Style = ProgressBarStyle.Marquee;
             progressScan.MarqueeAnimationSpeed = 0;
-            progressScan.Maximum = 20;
-            progressScan.Step = 1;
         }
 
         /// <summary>
@@ -50,8 +48,7 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void backWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            WMIC wmic = (WMIC)e.Argument;
-            e.Result = getSoftware(wmic);
+            AddNode((TreeNode)e.Argument);
         }
 
         /// <summary>
@@ -61,10 +58,8 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void backWorker_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            //progressScan.PerformStep();
-            TreeNode t = (TreeNode)e.Result;
-            AddNode(t);
-            progressScan.MarqueeAnimationSpeed = 0;
+            Interlocked.Decrement(ref running);
+            if (running == 0) ResetProgress();
         }
 
         /// <summary>
@@ -75,11 +70,9 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void button1_Click_1(object sender, EventArgs e)
         {
-            folderBrowserDialog1 = new FolderBrowserDialog();
-            folderBrowserDialog1.ShowNewFolderButton = true;
-            folderBrowserDialog1.RootFolder = Environment.SpecialFolder.Personal;
-            DialogResult result = folderBrowserDialog1.ShowDialog();
-            if (result == DialogResult.OK)
+            folderBrowserDialog1 = new FolderBrowserDialog() { ShowNewFolderButton = true, RootFolder = Environment.SpecialFolder.Personal };
+
+            if(folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 folderName = folderBrowserDialog1.SelectedPath;
                 txtPath.Text = "..." + folderBrowserDialog1.SelectedPath.Substring(folderName.LastIndexOf('\\'));
@@ -108,17 +101,29 @@ namespace ProgramSeeker
 
         /// <summary>
         /// Runs the actual WMIC query.
-        /// ToDo: Update so it runs on all available nodes.
+        /// ToDo: Update to divide nodes into chunks. Have a task run on multiple WMIC instances
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
+            progressScan.Style = ProgressBarStyle.Marquee;
             progressScan.MarqueeAnimationSpeed = 20;
 
-            WMIC wmic = new WMIC(listNodes.Items[0].ToString(), txtUsername.Text, txtPassword.Text, true);
-            if(!backWorker.IsBusy)
-                backWorker.RunWorkerAsync(wmic);
+            string userName = txtUsername.Text;
+            string password = txtPassword.Text;
+
+            foreach (string s in listNodes.Items)
+            {
+                Interlocked.Increment(ref running);
+                Task.Run(() =>
+                {
+                    TreeNode node;
+                    node = getSoftware(new WMIC(s, userName, password, true));
+                    while (backWorker.IsBusy) ;
+                    backWorker.RunWorkerAsync(node);
+                });
+            }
         }
 
         /// <summary>
@@ -133,9 +138,9 @@ namespace ProgramSeeker
             TreeNode node;
             string response = "";
 
-            response = wmicCall(wmic.createSoftwareQuery(chkProdVer.Checked));
+            response = wmicCall(wmic.createSoftwareQuery(wmic.Version));
             
-            foreach (string l in filterResponse(response))
+            foreach (string l in filterResponse(response, wmic.Version))
             {
                 if (!string.IsNullOrEmpty(l.Trim()))
                 {
@@ -147,7 +152,7 @@ namespace ProgramSeeker
                 }
             }
 
-            node = new TreeNode(wmic.getName());
+            node = new TreeNode(wmic.Name);
             node.Nodes.Add(softNode);
             return node;
         }
@@ -184,7 +189,7 @@ namespace ProgramSeeker
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private string[] filterResponse(string response)
+        private string[] filterResponse(string response, bool getVersion)
         { 
             string temp;
             int offset = 0;
@@ -196,7 +201,8 @@ namespace ProgramSeeker
                 if (!string.IsNullOrEmpty(temp))
                 {
                     string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim() + " ";
-                    string version = temp.Substring(temp.LastIndexOf(" ")).Trim();
+                    string version = "";
+                    if(getVersion) version = temp.Substring(temp.LastIndexOf(" ")).Trim();
                     lines[offset] = name + "\t\t" + version;
 
                     offset++;
@@ -288,25 +294,6 @@ namespace ProgramSeeker
         }
 
         /// <summary>
-        /// Traps mouse events in the listNodes treeview to display the remove context menu for nodes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listNodes_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                int index = this.listNodes.IndexFromPoint(e.Location);
-                listNodes.ClearSelected();
-                if (index != ListBox.NoMatches)
-                {
-                    listNodes.SelectedIndex = index;
-                    contextStripNodes.Show(listNodes, e.Location);
-                }
-            }
-        }
-
-        /// <summary>
         /// Handler for the context menu remove option
         /// </summary>
         /// <param name="sender"></param>
@@ -332,6 +319,23 @@ namespace ProgramSeeker
         /// </summary>
         /// <param name="node"></param>
         delegate void AddNodeCallback(TreeNode node);
+
+        delegate void ResetProgressCallback();
+        
+        public void ResetProgress()
+        {
+            if (this.progressScan.InvokeRequired)
+            {
+                ResetProgressCallback c = new ResetProgressCallback(ResetProgress);
+                this.Invoke(c, new object[] {  });
+            }
+            else
+            {
+                this.progressScan.MarqueeAnimationSpeed = 0;
+                this.progressScan.Style = ProgressBarStyle.Blocks;
+                this.progressScan.Value = 0;
+            }
+        }
 
         /// <summary>
         /// Adds a node to treeNodes
@@ -386,6 +390,44 @@ namespace ProgramSeeker
                     }
                 }
             }
+        }
+
+        private void treeNodes_MouseUp(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeNode node = treeNodes.SelectedNode;
+                contextStripResults.Show(treeNodes, e.Location); 
+            }
+        }
+
+        /// <summary>
+        /// Traps mouse events in the listNodes treeview to display the remove context menu for nodes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listNodes_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int index = this.listNodes.IndexFromPoint(e.Location);
+                listNodes.ClearSelected();
+                if (index != ListBox.NoMatches)
+                {
+                    listNodes.SelectedIndex = index;
+                    contextStripNodes.Show(listNodes, e.Location);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes a node from the list of node results
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            treeNodes.Nodes.Remove(this.treeNodes.SelectedNode);
         }
     }
 }

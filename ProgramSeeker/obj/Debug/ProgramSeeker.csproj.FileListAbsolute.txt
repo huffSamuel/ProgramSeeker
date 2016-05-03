@@ -23,3 +23,12 @@ T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeke
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
 T:\Libraries\Documents\Github\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe.config
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.exe
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.pdb
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.pdb
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
+C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache

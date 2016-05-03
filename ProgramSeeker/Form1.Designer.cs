@@ -65,6 +65,9 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.treeSoftware = new System.Windows.Forms.TreeView();
             this.progressScan = new System.Windows.Forms.ProgressBar();
+            this.contextStripResults = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextStripNodes.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -73,6 +76,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.contextStripResults.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -107,6 +111,7 @@
             this.treeNodes.Name = "treeNodes";
             this.treeNodes.Size = new System.Drawing.Size(833, 667);
             this.treeNodes.TabIndex = 11;
+            this.treeNodes.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeNodes_MouseUp);
             // 
             // tabPage4
             // 
@@ -420,6 +425,27 @@
             this.progressScan.Size = new System.Drawing.Size(217, 23);
             this.progressScan.TabIndex = 13;
             // 
+            // contextStripResults
+            // 
+            this.contextStripResults.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeToolStripMenuItem1,
+            this.refreshToolStripMenuItem});
+            this.contextStripResults.Name = "contextStripResults";
+            this.contextStripResults.Size = new System.Drawing.Size(153, 70);
+            // 
+            // removeToolStripMenuItem1
+            // 
+            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem1.Text = "Remove";
+            this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +468,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.contextStripResults.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -484,6 +511,9 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TreeView treeSoftware;
         private System.Windows.Forms.ProgressBar progressScan;
+        private System.Windows.Forms.ContextMenuStrip contextStripResults;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
     }
 }
 

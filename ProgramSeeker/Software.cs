@@ -8,8 +8,8 @@ namespace ProgramSeeker
 {
     class Software
     {
-        public string m_Name { get; set; }
-        public int m_Version { get; set; }
-        public int m_Count { get; set; }
+        public string Name { get; set; }
+        public int Version { get; set; }
+        public int Count { get; set; }
     }
 }
