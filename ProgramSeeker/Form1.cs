@@ -113,7 +113,7 @@ namespace ProgramSeeker
             string userName = txtUsername.Text;
             string password = txtPassword.Text;
 
-            foreach (string s in listNodes.Items)
+            foreach (string s in listTargets.Items)
             {
                 Interlocked.Increment(ref running);
                 Task.Run(() =>
@@ -232,14 +232,11 @@ namespace ProgramSeeker
                 CreateNoWindow = true
             };
 
-            Process reg = new Process();
-            reg.StartInfo = psi;
+            Process reg = new Process() { StartInfo = psi };
 
             reg.Start();
             using (System.IO.StreamReader output = reg.StandardOutput)
-            {
                 val += output.ReadToEnd();
-            }
 
             return val;
         }
@@ -252,7 +249,6 @@ namespace ProgramSeeker
         private void button2_Click(object sender, EventArgs e)
         {
             string line;
-            MessageBox.Show("Select text file that contains a raw paste of SCCM all items.");
             OpenFileDialog ofd = new OpenFileDialog();                              
             ofd.Filter = "Text Files (.txt)|*.txt|All Files(*.*)|*.*";
             ofd.FilterIndex = 1;
@@ -267,7 +263,7 @@ namespace ProgramSeeker
                     line = Regex.Replace(line, @"Yes", "");
                     line = Regex.Replace(line, @"No", "");
                     line = Regex.Replace(line, @"\t+", "");
-                    listNodes.Items.Add(line);
+                    listTargets.Items.Add(line);
                 }
             }
         }
@@ -279,7 +275,7 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            listNodes.Items.Add(txtSingleNode.Text.Trim());
+            listTargets.Items.Add(txtSingleNode.Text.Trim());
             txtSingleNode.Text = "";
         }
 
@@ -300,7 +296,7 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            listNodes.Items.RemoveAt(listNodes.SelectedIndex);
+            listTargets.Items.RemoveAt(listTargets.SelectedIndex);
         }
         /// <summary>
         /// Delegate for UpdateNodeText
@@ -410,12 +406,12 @@ namespace ProgramSeeker
         {
             if (e.Button == MouseButtons.Right)
             {
-                int index = this.listNodes.IndexFromPoint(e.Location);
-                listNodes.ClearSelected();
+                int index = this.listTargets.IndexFromPoint(e.Location);
+                listTargets.ClearSelected();
                 if (index != ListBox.NoMatches)
                 {
-                    listNodes.SelectedIndex = index;
-                    contextStripNodes.Show(listNodes, e.Location);
+                    listTargets.SelectedIndex = index;
+                    contextStripNodes.Show(listTargets, e.Location);
                 }
             }
         }
@@ -428,6 +424,35 @@ namespace ProgramSeeker
         private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             treeNodes.Nodes.Remove(this.treeNodes.SelectedNode);
+        }
+
+        /// <summary>
+        /// Enter key trap for add node
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtSingleNode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                listTargets.Items.Add(txtSingleNode.Text.Trim());
+                txtSingleNode.Text = "";
+            }
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string userName = txtUsername.Text;
+            string password = txtPassword.Text;
+            
+            Interlocked.Increment(ref running);
+            Task.Run(() =>
+            {
+                TreeNode node;
+                node = getSoftware(new WMIC(this.treeNodes.SelectedNode.Text, userName, password, true));
+                while (backWorker.IsBusy) ;
+                backWorker.RunWorkerAsync(node);
+            });
         }
     }
 }

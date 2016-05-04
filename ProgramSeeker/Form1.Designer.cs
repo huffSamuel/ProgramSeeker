@@ -38,11 +38,8 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.txtSingleNode = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.listNodes = new System.Windows.Forms.ListBox();
+            this.listTargets = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.chkModelName = new System.Windows.Forms.CheckBox();
             this.chkSerialNum = new System.Windows.Forms.CheckBox();
             this.chkProdVer = new System.Windows.Forms.CheckBox();
@@ -118,7 +115,7 @@
             this.tabPage4.Controls.Add(this.btnAdd);
             this.tabPage4.Controls.Add(this.txtSingleNode);
             this.tabPage4.Controls.Add(this.button2);
-            this.tabPage4.Controls.Add(this.listNodes);
+            this.tabPage4.Controls.Add(this.listTargets);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -144,6 +141,7 @@
             this.txtSingleNode.Size = new System.Drawing.Size(205, 20);
             this.txtSingleNode.TabIndex = 2;
             this.txtSingleNode.TextChanged += new System.EventHandler(this.txtSingleNode_TextChanged);
+            this.txtSingleNode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSingleNode_KeyDown);
             // 
             // button2
             // 
@@ -155,22 +153,19 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // listNodes
+            // listTargets
             // 
-            this.listNodes.FormattingEnabled = true;
-            this.listNodes.Location = new System.Drawing.Point(6, 3);
-            this.listNodes.Name = "listNodes";
-            this.listNodes.ScrollAlwaysVisible = true;
-            this.listNodes.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listNodes.Size = new System.Drawing.Size(283, 563);
-            this.listNodes.TabIndex = 0;
-            this.listNodes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listNodes_MouseUp);
+            this.listTargets.FormattingEnabled = true;
+            this.listTargets.Location = new System.Drawing.Point(6, 3);
+            this.listTargets.Name = "listTargets";
+            this.listTargets.ScrollAlwaysVisible = true;
+            this.listTargets.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listTargets.Size = new System.Drawing.Size(283, 563);
+            this.listTargets.TabIndex = 0;
+            this.listTargets.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listNodes_MouseUp);
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.checkBox7);
-            this.tabPage3.Controls.Add(this.checkBox6);
-            this.tabPage3.Controls.Add(this.checkBox5);
             this.tabPage3.Controls.Add(this.chkModelName);
             this.tabPage3.Controls.Add(this.chkSerialNum);
             this.tabPage3.Controls.Add(this.chkProdVer);
@@ -182,39 +177,10 @@
             this.tabPage3.Text = "Output";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // checkBox7
-            // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(23, 162);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(80, 17);
-            this.checkBox7.TabIndex = 6;
-            this.checkBox7.Text = "checkBox7";
-            this.checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(23, 138);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(80, 17);
-            this.checkBox6.TabIndex = 5;
-            this.checkBox6.Text = "checkBox6";
-            this.checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(23, 114);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(80, 17);
-            this.checkBox5.TabIndex = 4;
-            this.checkBox5.Text = "checkBox5";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            // 
             // chkModelName
             // 
             this.chkModelName.AutoSize = true;
+            this.chkModelName.Enabled = false;
             this.chkModelName.Location = new System.Drawing.Point(23, 90);
             this.chkModelName.Name = "chkModelName";
             this.chkModelName.Size = new System.Drawing.Size(106, 17);
@@ -225,6 +191,7 @@
             // chkSerialNum
             // 
             this.chkSerialNum.AutoSize = true;
+            this.chkSerialNum.Enabled = false;
             this.chkSerialNum.Location = new System.Drawing.Point(23, 66);
             this.chkSerialNum.Name = "chkSerialNum";
             this.chkSerialNum.Size = new System.Drawing.Size(112, 17);
@@ -436,7 +403,7 @@
             // removeToolStripMenuItem1
             // 
             this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
             this.removeToolStripMenuItem1.Text = "Remove";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
             // 
@@ -445,6 +412,7 @@
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -484,11 +452,8 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TextBox txtSingleNode;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ListBox listNodes;
+        private System.Windows.Forms.ListBox listTargets;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox chkModelName;
         private System.Windows.Forms.CheckBox chkSerialNum;
         private System.Windows.Forms.CheckBox chkProdVer;
