@@ -5,11 +5,13 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using System.Management;
 
 namespace ProgramSeeker
@@ -19,6 +21,7 @@ namespace ProgramSeeker
         private int running;
         private string folderName;
         private System.ComponentModel.BackgroundWorker backWorker = new System.ComponentModel.BackgroundWorker();
+        TreeNode lastSelectedNode;
 
         public Form1()
         {
@@ -59,7 +62,11 @@ namespace ProgramSeeker
         private void backWorker_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             Interlocked.Decrement(ref running);
-            if (running == 0) ResetProgress();
+            if (running == 0)
+            {
+                //WriteToFile();
+                ResetProgress();
+            }
         }
 
         /// <summary>
@@ -115,7 +122,7 @@ namespace ProgramSeeker
 
             foreach (string s in listTargets.Items)
             {
-                Interlocked.Increment(ref running);
+                Interlocked.Increment(ref running); // Update task count
                 Task.Run(() =>
                 {
                     TreeNode node;
@@ -129,12 +136,15 @@ namespace ProgramSeeker
         /// <summary>
         /// Gets a list of software from the target node.
         /// ToDo: Configure for adaptable WMIC calls rather than hard coded.
+        /// ToDo: Edit Node names
         /// </summary>
         /// <param name="nodeName"></param>
         /// <returns></returns>
         private TreeNode getSoftware(WMIC wmic)
         {
-            TreeNode softNode = new TreeNode("Software");
+            TreeNode softNode = new TreeNode();
+            softNode.Name = "Software";
+            softNode.Text = "Software";
             TreeNode node;
             string response = "";
 
@@ -144,15 +154,22 @@ namespace ProgramSeeker
             {
                 if (!string.IsNullOrEmpty(l.Trim()))
                 {
-                    TreeNode n = new TreeNode(l.Substring(0, l.LastIndexOf(" ")));
-                    n.Nodes.Add("Version: " + l.Substring(l.LastIndexOf(" ")));
+                    TreeNode version = new TreeNode();
+                    TreeNode n = new TreeNode();
+                    n.Name = l.Substring(0, l.LastIndexOf(" ")).Replace(' ', '.');
+                    n.Text = l.Substring(0, l.LastIndexOf(" "));
+                    version.Name = "Version";
+                    version.Text = "Version: " + l.Substring(l.LastIndexOf(" "));
+                    n.Nodes.Add(version);
                     softNode.Nodes.Add(n);
 
                     AddToSoftware(l);
                 }
             }
 
-            node = new TreeNode(wmic.Name);
+            node = new TreeNode();
+            node.Text = wmic.Name;
+            node.Name = wmic.Name;
             node.Nodes.Add(softNode);
             return node;
         }
@@ -392,7 +409,7 @@ namespace ProgramSeeker
         {
             if (e.Button == MouseButtons.Right)
             {
-                TreeNode node = treeNodes.SelectedNode;
+                lastSelectedNode = treeNodes.SelectedNode;
                 contextStripResults.Show(treeNodes, e.Location); 
             }
         }
@@ -449,10 +466,23 @@ namespace ProgramSeeker
             Task.Run(() =>
             {
                 TreeNode node;
-                node = getSoftware(new WMIC(this.treeNodes.SelectedNode.Text, userName, password, true));
+                node = getSoftware(new WMIC(lastSelectedNode.Text, userName, password, true));
                 while (backWorker.IsBusy) ;
                 backWorker.RunWorkerAsync(node);
             });
+        }
+
+        private void WriteToFile()
+        {
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            folder = Path.Combine( folder, "ProgramSeeker");
+            string path = folder + @"\data.xml";
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+            if (File.Exists(path))
+                File.Delete(path);
+
+            File.Create(path);
         }
     }
 }

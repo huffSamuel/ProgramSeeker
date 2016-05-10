@@ -31,4 +31,3 @@ C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeke
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
-C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
