@@ -352,6 +352,7 @@ namespace ProgramSeeker
 
         /// <summary>
         /// Adds a node to treeNodes
+        /// If duplicate nodes exist already than the node with more children is kept.
         /// </summary>
         /// <param name="node"></param>
         public void AddNode(TreeNode node)
@@ -362,7 +363,23 @@ namespace ProgramSeeker
                 this.Invoke(c, new object[] { node });
             }
             else
-                this.treeNodes.Nodes.Add(node);
+            {
+                if (this.treeNodes.Nodes.ContainsKey(node.Name))
+                {
+                    int existingCount = this.treeNodes.Nodes[node.Name].GetNodeCount(true);
+                    if (existingCount > node.GetNodeCount(true))
+                    {
+                        // If the existing value is higher don't do anything
+                    }
+                    else
+                    {
+                        this.treeNodes.Nodes.RemoveByKey(node.Name);
+                        treeNodes.Nodes.Add(node);
+                    }
+                }
+                else
+                    this.treeNodes.Nodes.Add(node);
+            }
         }
 
         /// <summary>
