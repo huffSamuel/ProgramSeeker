@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Management;
 
 namespace ProgramSeeker
@@ -32,6 +32,7 @@ namespace ProgramSeeker
             chkProdName.Checked = true;     // Get product by default
             progressScan.Style = ProgressBarStyle.Marquee;
             progressScan.MarqueeAnimationSpeed = 0;
+            ReadFromFile();
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace ProgramSeeker
             Interlocked.Decrement(ref running);
             if (running == 0)
             {
-                //WriteToFile();
+                WriteToFile();
                 ResetProgress();
             }
         }
@@ -119,6 +120,8 @@ namespace ProgramSeeker
 
             string userName = txtUsername.Text;
             string password = txtPassword.Text;
+            bool product = chkProdName.Checked;
+            bool version = chkProdVer.Checked;
 
             foreach (string s in listTargets.Items)
             {
@@ -126,7 +129,10 @@ namespace ProgramSeeker
                 Task.Run(() =>
                 {
                     TreeNode node;
-                    node = getSoftware(new WMIC(s, userName, password, true));
+                    if (product)
+                        node = getSoftware(new WMIC(s, userName, password, version));
+                    else
+                        node = new TreeNode();  
                     while (backWorker.IsBusy) ;
                     backWorker.RunWorkerAsync(node);
                 });
@@ -158,9 +164,12 @@ namespace ProgramSeeker
                     TreeNode n = new TreeNode();
                     n.Name = l.Substring(0, l.LastIndexOf(" ")).Replace(' ', '.');
                     n.Text = l.Substring(0, l.LastIndexOf(" "));
-                    version.Name = "Version";
-                    version.Text = "Version: " + l.Substring(l.LastIndexOf(" "));
-                    n.Nodes.Add(version);
+                    if (wmic.Version)
+                    {
+                        version.Name = "Version";
+                        version.Text = "Version: " + l.Substring(l.LastIndexOf(" "));
+                        n.Nodes.Add(version);
+                    }
                     softNode.Nodes.Add(n);
 
                     AddToSoftware(l);
@@ -217,7 +226,7 @@ namespace ProgramSeeker
                 temp = l.Trim();
                 if (!string.IsNullOrEmpty(temp))
                 {
-                    string name = temp.Substring(0, temp.LastIndexOf(" ")).Trim() + " ";
+                    string name = temp.Substring(0, (getVersion? temp.LastIndexOf(" ") : temp.Length)).Trim() + " ";
                     string version = "";
                     if(getVersion) version = temp.Substring(temp.LastIndexOf(" ")).Trim();
                     lines[offset] = name + "\t\t" + version;
@@ -315,6 +324,7 @@ namespace ProgramSeeker
         {
             listTargets.Items.RemoveAt(listTargets.SelectedIndex);
         }
+
         /// <summary>
         /// Delegate for UpdateNodeText
         /// </summary>
@@ -333,8 +343,14 @@ namespace ProgramSeeker
         /// <param name="node"></param>
         delegate void AddNodeCallback(TreeNode node);
 
+        /// <summary>
+        /// 
+        /// </summary>
         delegate void ResetProgressCallback();
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void ResetProgress()
         {
             if (this.progressScan.InvokeRequired)
@@ -493,13 +509,33 @@ namespace ProgramSeeker
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             folder = Path.Combine( folder, "ProgramSeeker");
-            string path = folder + @"\data.xml";
+            string path = folder + @"\responses.dat";
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-            if (File.Exists(path))
-                File.Delete(path);
 
-            File.Create(path);
+           using(Stream file = File.Open(path, FileMode.Create))
+           {
+               BinaryFormatter bf = new BinaryFormatter();
+               bf.Serialize(file, treeNodes.Nodes.Cast<TreeNode>().ToList());
+           }
+        }
+
+        private void ReadFromFile()
+        {
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            folder = Path.Combine( folder, "ProgramSeeker");
+            string path = folder + @"\responses.dat";
+            if(File.Exists(path))
+            {
+                using(Stream file = File.Open(path, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(file);
+
+                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                    treeNodes.Nodes.AddRange(nodeList);
+                }
+            }
         }
     }
 }
