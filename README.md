@@ -4,17 +4,17 @@ ProgramSeeker is a GUI utility for the command-line WMIC utility. It's initial p
 
 ####Features
 
-V0.1: 
+V0.1.1: 
 * Get Software and Version
 * View nodes and results
 * View software tallies
 * Allows username and password for remote nodes
 * Import nodes from text file
+* Scan individual or multiple endpoints
 
 ####Planned Features
 * Get PC Model and Serial Number
 * Get Usernames
 * Export report (Excel, CSV, XML)
-* Allow refreshing nodes
 * Save state (Currently loses all data on application close)
 * Split nodes into chunks and dedicate a thread to a chunk (Currently each node spawns a task)
