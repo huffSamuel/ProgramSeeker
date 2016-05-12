@@ -122,23 +122,29 @@ namespace ProgramSeeker
             string password = txtPassword.Text;
             bool product = chkProdName.Checked;
             bool version = chkProdVer.Checked;
+            bool serial = chkSerialNum.Checked;
+            bool model = chkModelName.Checked;
 
             foreach (string s in listTargets.Items)
             {
                 Interlocked.Increment(ref running); // Update task count
                 Task.Run(() =>
                 {
-                    TreeNode node;
+                    TreeNode node = null;
+                    WMIC wmic = new WMIC(s, userName, password, version, serial, model);
                     if (product)
-                        node = getSoftware(new WMIC(s, userName, password, version));
-                    else
-                        node = new TreeNode();  
+                        node = getSoftware(wmic);
+
+                    if (serial)
+                        node.Nodes.Add(getSerial(wmic));
+
                     while (backWorker.IsBusy) ;
                     backWorker.RunWorkerAsync(node);
                 });
             }
         }
 
+        // Change this so it only gets software and adds it to a node
         /// <summary>
         /// Gets a list of software from the target node.
         /// ToDo: Configure for adaptable WMIC calls rather than hard coded.
@@ -181,6 +187,15 @@ namespace ProgramSeeker
             node.Name = wmic.Name;
             node.Nodes.Add(softNode);
             return node;
+        }
+
+        private TreeNode getSerial(WMIC wmic)
+        {
+            TreeNode serial = new TreeNode();
+            string response = wmicCall(wmic.createSerialQuery());
+            serial.Name = "SerialNO";
+            serial.Text = "Serial Number: " + response.Replace("SerialNumber", "").Trim();
+            return serial;
         }
 
         /// <summary>
@@ -474,6 +489,7 @@ namespace ProgramSeeker
         private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             treeNodes.Nodes.Remove(this.treeNodes.SelectedNode);
+            WriteToFile();
         }
 
         /// <summary>
@@ -494,12 +510,16 @@ namespace ProgramSeeker
         {
             string userName = txtUsername.Text;
             string password = txtPassword.Text;
+            bool product = chkProdName.Checked;
+            bool version = chkProdVer.Checked;
+            bool serial = chkSerialNum.Checked;
+            bool model = chkModelName.Checked;
             
             Interlocked.Increment(ref running);
             Task.Run(() =>
             {
                 TreeNode node;
-                node = getSoftware(new WMIC(lastSelectedNode.Text, userName, password, true));
+                node = getSoftware(new WMIC(lastSelectedNode.Text, userName, password, version, serial, model));
                 while (backWorker.IsBusy) ;
                 backWorker.RunWorkerAsync(node);
             });

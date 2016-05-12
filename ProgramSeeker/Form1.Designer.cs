@@ -191,7 +191,6 @@
             // chkSerialNum
             // 
             this.chkSerialNum.AutoSize = true;
-            this.chkSerialNum.Enabled = false;
             this.chkSerialNum.Location = new System.Drawing.Point(23, 66);
             this.chkSerialNum.Name = "chkSerialNum";
             this.chkSerialNum.Size = new System.Drawing.Size(112, 17);
@@ -398,7 +397,7 @@
             this.removeToolStripMenuItem1,
             this.refreshToolStripMenuItem});
             this.contextStripResults.Name = "contextStripResults";
-            this.contextStripResults.Size = new System.Drawing.Size(153, 70);
+            this.contextStripResults.Size = new System.Drawing.Size(118, 48);
             // 
             // removeToolStripMenuItem1
             // 
@@ -410,7 +409,7 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
