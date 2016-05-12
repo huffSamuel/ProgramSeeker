@@ -11,10 +11,10 @@ V0.1.1:
 * Allows username and password for remote nodes
 * Import nodes from text file
 * Scan individual or multiple endpoints
+* Save results state on exit
 
 ####Planned Features
 * Get PC Model and Serial Number
 * Get Usernames
 * Export report (Excel, CSV, XML)
-* Save state (Currently loses all data on application close)
 * Split nodes into chunks and dedicate a thread to a chunk (Currently each node spawns a task)
