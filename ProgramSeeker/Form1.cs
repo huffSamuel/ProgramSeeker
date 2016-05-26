@@ -23,6 +23,8 @@ namespace ProgramSeeker
         private System.ComponentModel.BackgroundWorker backWorker = new System.ComponentModel.BackgroundWorker();
         TreeNode lastSelectedNode;
 
+        enum Query { software = 0, serial, model };
+
         public Form1()
         {
             InitializeComponent();
@@ -115,9 +117,11 @@ namespace ProgramSeeker
         /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
+            /* Update GUI */
             progressScan.Style = ProgressBarStyle.Marquee;
             progressScan.MarqueeAnimationSpeed = 20;
 
+            /* Save info from GUI */
             string userName = txtUsername.Text;
             string password = txtPassword.Text;
             bool product = chkProdName.Checked;
@@ -125,22 +129,48 @@ namespace ProgramSeeker
             bool serial = chkSerialNum.Checked;
             bool model = chkModelName.Checked;
 
+            /* Set up task lists */
+            List<List<string>> ParentList = new List<List<string>>();
+            int count;
+            for (count = 0; count < 10; ++count)
+                ParentList.Add(new List<String>());
+
+            count = 0;
             foreach (string s in listTargets.Items)
             {
-                Interlocked.Increment(ref running); // Update task count
+                ParentList[count % 10].Add(s);
+                count++;
+            }
+
+            foreach (List<string> list in ParentList)
+            {
+                Interlocked.Increment(ref running);
                 Task.Run(() =>
-                {
-                    TreeNode node = null;
-                    WMIC wmic = new WMIC(s, userName, password, version, serial, model);
-                    if (product)
-                        node = getSoftware(wmic);
+                    {
+                        foreach (string s in list)
+                        {
+                            TreeNode node = null;
+                            WMIC wmic = new WMIC(s, userName, password, version, serial, model);
+                            if (product)
+                                node = getSoftware(wmic);
 
-                    if (serial)
-                        node.Nodes.Add(getSerial(wmic));
+                            if (serial)
+                                node.Nodes.Add(getSerial(wmic));
 
-                    while (backWorker.IsBusy) ;
-                    backWorker.RunWorkerAsync(node);
-                });
+                            if (model)
+                                node.Nodes.Add(getModel(wmic));
+
+                            if (node.GetNodeCount(true) < 4)
+                                AddFailedNode(node);
+                            else
+                                AddNode(node);
+                        }
+                        Interlocked.Decrement(ref running);
+                        if (running == 0)
+                        {
+                            ResetProgress();
+                        }
+                    });
             }
         }
 
@@ -160,7 +190,7 @@ namespace ProgramSeeker
             TreeNode node;
             string response = "";
 
-            response = wmicCall(wmic.createSoftwareQuery(wmic.Version));
+            response = wmicCall(wmic.createQuery((int)Query.software));
             
             foreach (string l in filterResponse(response, wmic.Version))
             {
@@ -192,10 +222,20 @@ namespace ProgramSeeker
         private TreeNode getSerial(WMIC wmic)
         {
             TreeNode serial = new TreeNode();
-            string response = wmicCall(wmic.createSerialQuery());
+            string response = wmicCall(wmic.createQuery((int)Query.serial));
             serial.Name = "SerialNO";
             serial.Text = "Serial Number: " + response.Replace("SerialNumber", "").Trim();
+            serial.Tag = response;
             return serial;
+        }
+
+        private TreeNode getModel(WMIC wmic)
+        {
+            TreeNode model = new TreeNode();
+            string response = wmicCall(wmic.createQuery((int)Query.model));
+            model.Name = "Model";
+            model.Text = response.Replace("Name", "").Trim();
+            return model;
         }
 
         /// <summary>
@@ -358,6 +398,9 @@ namespace ProgramSeeker
         /// <param name="node"></param>
         delegate void AddNodeCallback(TreeNode node);
 
+        delegate void AddFailedNodeCallback(TreeNode node);
+        delegate void RemoveFailedNodeCallback(TreeNode node);
+
         /// <summary>
         /// 
         /// </summary>
@@ -395,21 +438,41 @@ namespace ProgramSeeker
             }
             else
             {
-                if (this.treeNodes.Nodes.ContainsKey(node.Name))
-                {
-                    int existingCount = this.treeNodes.Nodes[node.Name].GetNodeCount(true);
-                    if (existingCount > node.GetNodeCount(true))
-                    {
-                        // If the existing value is higher don't do anything
-                    }
-                    else
-                    {
-                        this.treeNodes.Nodes.RemoveByKey(node.Name);
-                        treeNodes.Nodes.Add(node);
-                    }
-                }
-                else
-                    this.treeNodes.Nodes.Add(node);
+                if (this.treeNodes.Nodes.ContainsKey(node.Name)) 
+                    this.treeNodes.Nodes.RemoveByKey(node.Name);
+                RemoveFailed(node);
+                    
+                this.treeNodes.Nodes.Add(node);
+            }
+        }
+
+        public void RemoveFailed(TreeNode node)
+        {
+            if (this.treeFailed.InvokeRequired)
+            {
+                RemoveFailedNodeCallback c = new RemoveFailedNodeCallback(RemoveFailed);
+                this.Invoke(c, new object[] { node });
+            }
+            else
+            {
+                if (this.treeFailed.Nodes.ContainsKey(node.Name))
+                    this.treeFailed.Nodes.RemoveByKey(node.Name);
+            }
+        }
+
+        public void AddFailedNode(TreeNode node)
+        {
+            if (this.treeFailed.InvokeRequired)
+            {
+                AddFailedNodeCallback c = new AddFailedNodeCallback(AddFailedNode);
+                this.Invoke(c, new object[] { node });
+            }
+            else
+            {
+                if (this.treeFailed.Nodes.ContainsKey(node.Name))
+                    this.treeFailed.Nodes.RemoveByKey(node.Name);
+
+                this.treeFailed.Nodes.Add(node);
             }
         }
 
@@ -556,6 +619,54 @@ namespace ProgramSeeker
                     treeNodes.Nodes.AddRange(nodeList);
                 }
             }
+        }
+
+        private void ExcelExport()
+        {
+            Microsoft.Office.Interop.Excel.Application oXL;
+            Microsoft.Office.Interop.Excel._Workbook oWB;
+            Microsoft.Office.Interop.Excel._Worksheet oSheet;
+            Microsoft.Office.Interop.Excel.Range oRng;
+            object misvalue = System.Reflection.Missing.Value;
+            try
+            {
+                oXL = new Microsoft.Office.Interop.Excel.Application();
+                oXL.Visible = true;
+                oWB = oXL.Workbooks.Add("");
+                oSheet = oWB.ActiveSheet;
+
+                int x = 1;
+                int y = 2;
+
+                oSheet.Cells[1, 1] = "Computer Name";
+                oSheet.Cells[1, 2] = "Computer Model";
+                oSheet.Cells[1, 3] = "Serial Number";
+                oSheet.Cells[1, 4] = "Software";
+
+                foreach (TreeNode t in treeNodes.Nodes)
+                {
+                    oSheet.Cells[y, x++] = t.Text;
+                    oSheet.Cells[y, x++] = t.Nodes[2].Text;
+                    oSheet.Cells[y, x++] = t.Nodes[1].Tag;
+                    foreach (TreeNode a in t.Nodes[0].Nodes)
+                        oSheet.Cells[y, x++] = a.Text;
+                    ++y;
+                    x = 1;
+                }
+            }
+            catch (Exception x) { }
+        }
+
+        private void clearOutputToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treeNodes.Nodes.Clear();
+            treeSoftware.Nodes.Clear();
+            WriteToFile();
+        }
+
+        private void excelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExcelExport();
         }
     }
 }

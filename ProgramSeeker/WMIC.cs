@@ -23,32 +23,29 @@ namespace ProgramSeeker
             Serial = serial;
         }
 
-        public string createQuery()
+        public string createQuery(int queryType)
         {
-            return @"/c wmic product get name, version";
-        }
+            string query = @"/c wmic";
 
-        public string createSoftwareQuery(bool getVersion)
-        {
-            string val = "";
-            if (Name.ToLower() == Environment.MachineName.ToLower())
-                val = @"/c wmic product get name" + (getVersion ? ",version" : "");
-            else
-                val = @"/c wmic /node:" + Name + " /user:" + Name + @"\" + Username + " /password:\"" + Password + "\" product get name" + (getVersion ? ",version" : "");
+            if (Name.ToLower() != Environment.MachineName.ToLower())
+            {
+                query += @" /node:" + Name + " /user:" + Name + @"\" + Username + " /password:\"" + Password + "\"";
+            }
 
-            return val;
-        }
+            switch (queryType)
+            {
+                case 0:
+                    query += " product get name" + (Version ? ", version" : "");
+                    break;
+                case 1:
+                    query += " bios get serialnumber";
+                    break;
+                case 2:
+                    query += " csproduct get name";
+                    break;
+            }
 
-        public string createSerialQuery()
-        {
-            string val = "";
-
-            if (Name.ToLower() == Environment.MachineName.ToLower())
-                val = @"/c wmic bios get serialnumber";
-            else
-                val = @"/c wmic /node:" + Name + " /user:" + Name + @"\" + Username + " /password:\"" + Password + "\" bios get serialnumber";
-
-            return val;
+            return query;
         }
 
         public bool Version { get; set; }
