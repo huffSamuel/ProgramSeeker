@@ -168,7 +168,8 @@ namespace ProgramSeeker
                         Interlocked.Decrement(ref running);
                         if (running == 0)
                         {
-                            ResetProgress();
+                            ResetProgress(); 
+                            WriteToFile();
                         }
                     });
             }
@@ -189,9 +190,10 @@ namespace ProgramSeeker
             softNode.Text = "Software";
             TreeNode node;
             string response = "";
+            string dupResponse;
 
             response = wmicCall(wmic.createQuery((int)Query.software));
-            
+            dupResponse = response;
             foreach (string l in filterResponse(response, wmic.Version))
             {
                 if (!string.IsNullOrEmpty(l.Trim()))
@@ -215,7 +217,8 @@ namespace ProgramSeeker
             node = new TreeNode();
             node.Text = wmic.Name;
             node.Name = wmic.Name;
-            node.Nodes.Add(softNode);
+            if (softNode.GetNodeCount(true) > 1)
+                node.Nodes.Add(softNode);
             return node;
         }
 
@@ -596,11 +599,27 @@ namespace ProgramSeeker
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
-           using(Stream file = File.Open(path, FileMode.Create))
-           {
-               BinaryFormatter bf = new BinaryFormatter();
-               bf.Serialize(file, treeNodes.Nodes.Cast<TreeNode>().ToList());
-           }
+            using(Stream file = File.Open(path, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+               
+                bf.Serialize(file, treeNodes.Nodes.Cast<TreeNode>().ToList());
+            }
+
+            path = folder + @"\failed.dat";
+            using(Stream file = File.Open(path, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(file, treeFailed.Nodes.Cast<TreeNode>().ToList());
+            }
+
+            path = folder + @"\software.dat";
+            using(Stream file = File.Open(path, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(file, treeSoftware.Nodes.Cast<TreeNode>().ToList());
+            }
+            
         }
 
         private void ReadFromFile()
@@ -617,6 +636,32 @@ namespace ProgramSeeker
 
                     TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
                     treeNodes.Nodes.AddRange(nodeList);
+                }
+            }
+
+            path = folder + @"\failed.dat";
+            if (File.Exists(path))
+            {
+                using (Stream file = File.Open(path, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(file);
+
+                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                    treeFailed.Nodes.AddRange(nodeList);
+                }
+            }
+
+            path = folder + @"\software.dat";
+            if (File.Exists(path))
+            {
+                using (Stream file = File.Open(path, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(file);
+
+                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                    treeSoftware.Nodes.AddRange(nodeList);
                 }
             }
         }
@@ -667,6 +712,76 @@ namespace ProgramSeeker
         private void excelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExcelExport();
+        }
+
+        private void treeFailed_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                contextFailed.Show(treeFailed, e.Location);
+            }
+        }
+
+        private void reScanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            while (running > 0);
+
+
+            /* Update GUI */
+            progressScan.Style = ProgressBarStyle.Marquee;
+            progressScan.MarqueeAnimationSpeed = 20;
+
+            /* Save info from GUI */
+            string userName = txtUsername.Text;
+            string password = txtPassword.Text;
+            bool product = chkProdName.Checked;
+            bool version = chkProdVer.Checked;
+            bool serial = chkSerialNum.Checked;
+            bool model = chkModelName.Checked;
+
+            /* Set up task lists */
+            List<List<string>> ParentList = new List<List<string>>();
+            int count;
+            for (count = 0; count < 10; ++count)
+                ParentList.Add(new List<String>());
+
+            count = 0;
+            foreach (TreeNode t in treeFailed.Nodes)
+            {
+                ParentList[count % 10].Add(t.Text);
+                count++;
+            }
+
+            foreach (List<string> list in ParentList)
+            {
+                Interlocked.Increment(ref running);
+                Task.Run(() =>
+                {
+                    foreach (string s in list)
+                    {
+                        TreeNode node = null;
+                        WMIC wmic = new WMIC(s, userName, password, version, serial, model);
+                        if (product)
+                            node = getSoftware(wmic);
+
+                        if (serial)
+                            node.Nodes.Add(getSerial(wmic));
+
+                        if (model)
+                            node.Nodes.Add(getModel(wmic));
+
+                        if (node.GetNodeCount(true) < 4)
+                            AddFailedNode(node);
+                        else
+                            AddNode(node);
+                    }
+                    Interlocked.Decrement(ref running);
+                    if (running == 0)
+                    {
+                        ResetProgress();
+                    }
+                });
+            }
         }
     }
 }

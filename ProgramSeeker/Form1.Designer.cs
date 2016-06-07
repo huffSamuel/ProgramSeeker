@@ -74,6 +74,8 @@
             this.excelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.treeFailed = new System.Windows.Forms.TreeView();
+            this.contextFailed = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.reScanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextStripNodes.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -85,6 +87,7 @@
             this.contextStripResults.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.contextFailed.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -496,6 +499,21 @@
             this.treeFailed.Name = "treeFailed";
             this.treeFailed.Size = new System.Drawing.Size(829, 648);
             this.treeFailed.TabIndex = 0;
+            this.treeFailed.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeFailed_MouseUp);
+            // 
+            // contextFailed
+            // 
+            this.contextFailed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reScanToolStripMenuItem});
+            this.contextFailed.Name = "contextFailed";
+            this.contextFailed.Size = new System.Drawing.Size(153, 48);
+            // 
+            // reScanToolStripMenuItem
+            // 
+            this.reScanToolStripMenuItem.Name = "reScanToolStripMenuItem";
+            this.reScanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.reScanToolStripMenuItem.Text = "Re-Scan";
+            this.reScanToolStripMenuItem.Click += new System.EventHandler(this.reScanToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -525,6 +543,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabPage6.ResumeLayout(false);
+            this.contextFailed.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -577,6 +596,8 @@
         private System.Windows.Forms.ToolStripMenuItem excelToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.TreeView treeFailed;
+        private System.Windows.Forms.ContextMenuStrip contextFailed;
+        private System.Windows.Forms.ToolStripMenuItem reScanToolStripMenuItem;
     }
 }
 
