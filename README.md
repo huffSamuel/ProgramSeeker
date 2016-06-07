@@ -22,6 +22,8 @@ V0.2.1:
 * Failed nodes are grouped separately
 
 ####Planned Features
-* Get Usernames
+* Get Usernames - Indefinitely postponed. WMIC is not returning results for this
+* Add additional queries
 * Additional report types (XML, CSV)
+* Trap and display failure reason
 * Proper code design with nice classes and patterns =)
