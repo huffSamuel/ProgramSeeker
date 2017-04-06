@@ -1,0 +1,7 @@
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\bin\Debug\ProgramSeeker.Worker.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\bin\Debug\ProgramSeeker.Worker.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\bin\Debug\ProgramSeeker.Core.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\bin\Debug\ProgramSeeker.Core.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\obj\Debug\ProgramSeeker.Worker.csprojResolveAssemblyReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\obj\Debug\ProgramSeeker.Worker.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Worker\obj\Debug\ProgramSeeker.Worker.pdb

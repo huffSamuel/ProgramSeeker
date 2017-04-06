@@ -192,6 +192,7 @@ namespace ProgramSeeker
             string response = "";
             string dupResponse;
 
+
             response = wmicCall(wmic.createQuery((int)Query.software));
             dupResponse = response;
             foreach (string l in filterResponse(response, wmic.Version))

@@ -1,0 +1,10 @@
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Playground.exe.config
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Playground.exe
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Playground.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Core.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Worker.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Core.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\bin\Debug\ProgramSeeker.Worker.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\obj\Debug\ProgramSeeker.Playground.csprojResolveAssemblyReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\obj\Debug\ProgramSeeker.Playground.exe
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Playground\obj\Debug\ProgramSeeker.Playground.pdb

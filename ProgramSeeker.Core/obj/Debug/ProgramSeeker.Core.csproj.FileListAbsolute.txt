@@ -1,0 +1,5 @@
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Core\bin\Debug\ProgramSeeker.Core.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Core\bin\Debug\ProgramSeeker.Core.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Core\obj\Debug\ProgramSeeker.Core.csprojResolveAssemblyReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Core\obj\Debug\ProgramSeeker.Core.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker.Core\obj\Debug\ProgramSeeker.Core.pdb

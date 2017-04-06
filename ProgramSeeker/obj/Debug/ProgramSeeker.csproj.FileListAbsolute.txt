@@ -33,3 +33,14 @@ C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeke
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\Interop.LCC11.dll
 C:\Users\telecom\Source\Repos\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.ResolveComReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe.config
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.exe
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\bin\Debug\ProgramSeeker.pdb
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csprojResolveAssemblyReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.ResolveComReference.cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Form1.resources
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.Properties.Resources.resources
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.csproj.GenerateResource.Cache
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.exe
+C:\Users\xsand\Documents\GitHub\ProgramSeeker\ProgramSeeker\obj\Debug\ProgramSeeker.pdb
