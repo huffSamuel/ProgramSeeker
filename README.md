@@ -2,7 +2,10 @@
 
 ProgramSeeker is a GUI utility for the command-line WMIC utility. It's initial purpose was to scan all nodes on a network to retrieve currently installed software. The software is currently functional and can be used, but is somewhat clunky. My time is currently dedicated to finishing up computer labs for the term and this is taking more of a back-burner position (at least for the time being).
 
-####Features
+# Work In Progress
+This utility is undergoing a MAJOR restructure. To use a working (but ugly) utility, use the executable located in ProgramSeeker. Other folders contain no utilities that will currently obtain information.
+
+#### Features
 
 V0.2.1: 
 * Supported WMIC Queries
@@ -14,14 +17,14 @@ V0.2.1:
 * Scan individual or multiple endpoints
 * Save results state on exit
 
-####New Features!!
+#### New Features!!
 * New Queries!
   * Serial Number
   * Computer Model
 * Export report to Excel
 * Failed nodes are grouped separately
 
-####Planned Features
+#### Planned Features
 * Get Usernames - Indefinitely postponed. WMIC is not returning results for this
 * Add additional queries
 * Additional report types (XML, CSV)
